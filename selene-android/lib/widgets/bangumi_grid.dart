@@ -15,6 +15,8 @@ class BangumiGrid extends StatelessWidget {
   final Function(VideoInfo) onVideoTap;
   final Function(VideoInfo, VideoMenuAction)? onGlobalMenuAction;
   final String contentType; // 'anime' 或其他
+  /// 网络类错误时给用户一条出路：错误页原本只有文字，没人知道该做什么。
+  final VoidCallback? onRetry;
 
   const BangumiGrid({
     super.key,
@@ -24,6 +26,7 @@ class BangumiGrid extends StatelessWidget {
     required this.onVideoTap,
     this.onGlobalMenuAction,
     this.contentType = 'anime', // 默认为动漫
+    this.onRetry,
   });
 
   @override
@@ -132,6 +135,23 @@ class BangumiGrid extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
           ),
+          if (onRetry != null) ...[
+            const SizedBox(height: 24),
+            OutlinedButton.icon(
+              onPressed: onRetry,
+              icon: const Icon(Icons.refresh_rounded, size: 18),
+              label: const Text('重试'),
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFF27AE60),
+                side: const BorderSide(color: Color(0xFF27AE60)),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

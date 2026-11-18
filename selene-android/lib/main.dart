@@ -67,23 +67,27 @@ class SeleneApp extends StatelessWidget {
       child: Consumer<ThemeService>(
         builder: (context, themeService, child) {
           return MaterialApp(
-            title: 'Selene',
+            title: 'LunaTV',
             debugShowCheckedModeBanner: false,
             theme: themeService.lightTheme,
             darkTheme: themeService.darkTheme,
             themeMode: themeService.themeMode,
             home: const AppWrapper(),
             builder: (context, child) {
-              // 为 Windows 平台改善字体渲染
+              // 全局禁用文本选择：影视 App 里长按海报/片名会弹出系统的
+              // 「编辑所选文本 / 在地图中打开」浮层，是最常见的误触。
+              // 需要复制的地方（如公告里的邀请码）自己用 SelectableText。
+              Widget body = SelectionContainer.disabled(child: child!);
               if (Platform.isWindows) {
-                return MediaQuery(
+                // 为 Windows 平台改善字体渲染
+                body = MediaQuery(
                   data: MediaQuery.of(context).copyWith(
                     textScaler: const TextScaler.linear(1.0),
                   ),
-                  child: child!,
+                  child: body,
                 );
               }
-              return child!;
+              return body;
             },
           );
         },

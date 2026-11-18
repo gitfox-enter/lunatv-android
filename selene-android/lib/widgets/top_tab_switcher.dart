@@ -94,7 +94,7 @@ class _TopTabSwitcherState extends State<TopTabSwitcher>
             height: 32,
             decoration: BoxDecoration(
               color: themeService.isDarkMode
-                  ? const Color(0xFF333333)
+                  ? const Color(0xFF242424)
                   : const Color(0xFFe0e0e0),
               borderRadius: BorderRadius.circular(16),
             ),
@@ -113,8 +113,10 @@ class _TopTabSwitcherState extends State<TopTabSwitcher>
                         width: 80,
                         height: 32,
                         decoration: BoxDecoration(
+                          // 深色模式下原 #1e1e1e 在 #333333 底槽上几乎看不见，
+                          // 选中态形同虚设；改用亮色胶囊，一眼可辨当前位置。
                           color: themeService.isDarkMode
-                              ? const Color(0xFF1e1e1e)
+                              ? const Color(0xFF4A4A4A)
                               : Colors.white,
                           borderRadius: BorderRadius.circular(16),
                           boxShadow: [

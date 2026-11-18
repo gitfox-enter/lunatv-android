@@ -122,7 +122,7 @@ class _HotMoviesSectionState extends State<HotMoviesSection> {
       isLoading: _isLoading,
       hasError: _hasError,
       onRetry: _loadHotMovies,
-      cardCount: 2.75,
+      cardCount: 2.55,
     );
   }
 }

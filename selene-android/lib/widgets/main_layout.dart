@@ -436,26 +436,43 @@ class _MainLayoutState extends State<MainLayout> {
                   });
                 },
                 behavior: HitTestBehavior.opaque,
+                // 搜索是这个产品的第一动作，不该只是一个和装饰字标差不多
+                // 显眼的放大镜图标：给它一个带文字的胶囊入口。
                 child: Container(
-                  width: 32,
                   height: 32,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(16),
                     color: DeviceUtils.isPC() && _isSearchButtonHovered
                         ? (themeService.isDarkMode
                             ? const Color(0xFF333333)
                             : const Color(0xFFe0e0e0))
-                        : Colors.transparent,
+                        : (themeService.isDarkMode
+                            ? const Color(0xFF2A2D35)
+                            : const Color(0xFFF0F2F5)),
                   ),
-                  child: Center(
-                    child: Icon(
-                      LucideIcons.search,
-                      color: themeService.isDarkMode
-                          ? const Color(0xFFffffff)
-                          : const Color(0xFF2c3e50),
-                      size: 24,
-                      weight: 1.0,
-                    ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        LucideIcons.search,
+                        color: themeService.isDarkMode
+                            ? const Color(0xFFE6E9EF)
+                            : const Color(0xFF374151),
+                        size: 16,
+                        weight: 1.0,
+                      ),
+                      const SizedBox(width: 5),
+                      Text(
+                        '搜索',
+                        style: FontUtils.poppins(
+                          fontSize: 13,
+                          color: themeService.isDarkMode
+                              ? const Color(0xFFE6E9EF)
+                              : const Color(0xFF374151),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -467,7 +484,7 @@ class _MainLayoutState extends State<MainLayout> {
               onTap: widget.onHomeTap,
               behavior: HitTestBehavior.opaque,
               child: Text(
-                'Selene',
+                'LunaTV',
                 style: FontUtils.sourceCodePro(
                   fontSize: 24,
                   fontWeight: FontWeight.w400,

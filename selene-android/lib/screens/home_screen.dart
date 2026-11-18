@@ -19,6 +19,7 @@ import '../utils/font_utils.dart';
 import '../services/page_cache_service.dart';
 import '../services/version_service.dart';
 import '../widgets/update_dialog.dart';
+import '../widgets/notice_dialog.dart';
 import 'movie_screen.dart';
 import 'tv_screen.dart';
 import 'anime_screen.dart';
@@ -46,6 +47,12 @@ class _HomeScreenState extends State<HomeScreen> {
     _pageController = PageController(initialPage: 0);
     // 初始化底栏 PageController
     _bottomNavPageController = PageController(initialPage: 0);
+    // 首次进入首页时展示公告（一次性，点过「我知道了」不再出现）
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        NoticeDialog.maybeShow(context);
+      }
+    });
     // 进入首页时直接刷新播放记录和收藏夹缓存
     _refreshCacheOnHomeEnter();
     // 检查应用更新

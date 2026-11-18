@@ -583,6 +583,7 @@ class _AnimeScreenState extends State<AnimeScreen> {
                       _handleMenuAction(videoInfo, action);
                     },
                     contentType: 'anime',
+                    onRetry: () => _fetchAnimeData(isRefresh: true),
                   )
                 : DoubanMoviesGrid(
                     movies: _animeList,

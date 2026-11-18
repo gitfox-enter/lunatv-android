@@ -21,7 +21,7 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     
     <application
-        android:label="Selene"
+        android:label="LunaTV"
         android:name="${applicationName}"
         android:debuggable="true"
         android:icon="@mipmap/launcher_icon"

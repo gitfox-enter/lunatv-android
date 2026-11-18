@@ -132,6 +132,8 @@ class ThemeService extends ChangeNotifier {
       ),
       textTheme: textTheme,
       fontFamily: Platform.isWindows ? 'Microsoft YaHei' : null,
+      // 手机上不画滚动条：屏幕右缘那条细滑块会被一眼认出是网页套壳。
+      scrollbarTheme: const ScrollbarThemeData(thickness: WidgetStatePropertyAll(0)),
     );
   }
 
@@ -198,6 +200,8 @@ class ThemeService extends ChangeNotifier {
       ),
       textTheme: textTheme,
       fontFamily: Platform.isWindows ? 'Microsoft YaHei' : null,
+      // 手机上不画滚动条：屏幕右缘那条细滑块会被一眼认出是网页套壳。
+      scrollbarTheme: const ScrollbarThemeData(thickness: WidgetStatePropertyAll(0)),
     );
   }
 }

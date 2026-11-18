@@ -104,7 +104,19 @@ class BangumiService {
         );
       }
     } catch (e) {
-      return ApiResponse.error('Bangumi 数据请求异常: ${e.toString()}');
+      // 不把原始异常抛给用户：SocketException / errno 104 这类文本对用户
+      // 没有任何意义，只会让人以为 App 坏了。网络不可达时给可执行的提示。
+      final msg = e.toString();
+      final isNetwork = msg.contains('SocketException') ||
+          msg.contains('errno = 104') ||
+          msg.contains('Connection reset') ||
+          msg.contains('TimeoutException') ||
+          msg.contains('Handshake');
+      return ApiResponse.error(
+        isNetwork
+            ? '无法连接 Bangumi 服务器，请检查网络后重试'
+            : '加载失败，请稍后重试',
+      );
     }
   }
 

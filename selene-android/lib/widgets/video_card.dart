@@ -202,21 +202,29 @@ class _VideoCardState extends State<VideoCard> {
                             duration: const Duration(milliseconds: 200),
                             curve: Curves.easeInOut,
                             child: Container(
-                              width: 30,
-                              height: 30,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFe91e63), // 粉色圆形背景
-                                shape: BoxShape.circle,
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 6, vertical: 3),
+                              decoration: BoxDecoration(
+                                // 深色半透明胶囊 + 琥珀色星标：粉色圆形在用户
+                                // 认知里是「未读消息数」，不是评分。
+                                color: Colors.black.withOpacity(0.72),
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Center(
-                                child: Text(
-                                  widget.videoInfo.rate!,
-                                  style: FontUtils.poppins(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const Icon(Icons.star_rounded,
+                                      size: 12, color: Color(0xFFFFC53D)),
+                                  const SizedBox(width: 2),
+                                  Text(
+                                    widget.videoInfo.rate!,
+                                    style: FontUtils.poppins(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w600,
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
                             ),
                           ),

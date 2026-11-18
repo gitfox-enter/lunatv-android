@@ -34,7 +34,7 @@ class RecommendationSection extends StatefulWidget {
     this.isLoading = false,
     this.hasError = false,
     this.onRetry,
-    this.cardCount = 2.75,
+    this.cardCount = 2.55,
     this.rateMap,
   });
 
@@ -158,7 +158,7 @@ class _RecommendationSectionState extends State<RecommendationSection> {
     final isPC = DeviceUtils.isPC();
 
     return Container(
-      margin: const EdgeInsets.only(bottom: 24),
+      margin: const EdgeInsets.only(bottom: 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -224,7 +224,7 @@ class _RecommendationSectionState extends State<RecommendationSection> {
               ],
             ),
           ),
-          const SizedBox(height: 12),
+          const SizedBox(height: 10),
           // 内容区域
           if (widget.isLoading)
             _buildLoadingState()
