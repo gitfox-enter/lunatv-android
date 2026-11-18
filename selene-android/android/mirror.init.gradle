@@ -1,0 +1,51 @@
+// Local-only init script (passed with -I): the direct Maven/Google endpoints
+// answer at tens of KB/s on this network, which turns a first build into hours.
+//
+// Every repository list is stripped of them. Mirrors are only added back for
+// this app's own build: the included Flutter Gradle build runs with
+// FAIL_ON_PROJECT_REPOS, so touching its project repositories breaks it (it
+// already gets the mirrors from its own settings file).
+def MIRRORS = [
+        'https://maven.aliyun.com/repository/google',
+        'https://maven.aliyun.com/repository/central',
+        'https://maven.aliyun.com/repository/gradle-plugin',
+]
+
+def MAIN_ROOT = new File('D:/WorkBuddy/lunatv-port/selene-android/android').canonicalFile
+
+def scrub = { repos ->
+    def drop = []
+    repos.each { r ->
+        if (r instanceof MavenArtifactRepository) {
+            def u = r.url.toString()
+            if (u.contains('repo.maven.apache.org') || u.contains('repo1.maven.org')
+                    || u.contains('dl.google.com') || u.contains('plugins.gradle.org/m2')) {
+                drop << r
+            }
+        }
+    }
+    drop.each { repos.remove(it) }
+}
+
+def addMirrors = { repos ->
+    MIRRORS.each { m ->
+        def exists = repos.any { it instanceof MavenArtifactRepository && it.url.toString() == m }
+        if (!exists) {
+            repos.maven { url = m }
+        }
+    }
+}
+
+beforeSettings { settings ->
+    scrub(settings.pluginManagement.repositories)
+    addMirrors(settings.pluginManagement.repositories)
+}
+
+gradle.beforeProject { project ->
+    scrub(project.buildscript.repositories)
+    scrub(project.repositories)
+    if (project.rootProject.projectDir.canonicalFile == MAIN_ROOT) {
+        addMirrors(project.buildscript.repositories)
+        addMirrors(project.repositories)
+    }
+}

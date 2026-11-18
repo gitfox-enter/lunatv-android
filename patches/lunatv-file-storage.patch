@@ -1,0 +1,67 @@
+diff --git a/next.config.js b/next.config.js
+index eef0435..065e12f 100644
+--- a/next.config.js
++++ b/next.config.js
+@@ -12,6 +12,10 @@ const nextConfig = {
+ 
+   experimental: {
+     instrumentationHook: process.env.NODE_ENV === 'production',
++    // Port patch: Next's default middleware sandbox uses runtime.context.
++    // addEventListener, which Bun does not implement — requests 500. Running
++    // middleware in the Node runtime skips that sandbox entirely.
++    nodeMiddleware: true,
+   },
+ 
+   // Uncoment to add domain whitelist
+diff --git a/src/lib/db.ts b/src/lib/db.ts
+index f413c18..6f2ca69 100644
+--- a/src/lib/db.ts
++++ b/src/lib/db.ts
+@@ -1,15 +1,17 @@
+ /* eslint-disable no-console, @typescript-eslint/no-explicit-any, @typescript-eslint/no-non-null-assertion */
+ 
+ import { AdminConfig } from './admin.types';
++import { FileStorage } from './file.db';
+ import { KvrocksStorage } from './kvrocks.db';
+ import { RedisStorage } from './redis.db';
+ import { Favorite, IStorage, PlayRecord, SkipConfig } from './types';
+ import { UpstashRedisStorage } from './upstash.db';
+ 
+-// storage type 常量: 'localstorage' | 'redis' | 'upstash'，默认 'localstorage'
++// storage type 常量: 'localstorage' | 'file' | 'redis' | 'upstash'，默认 'localstorage'
+ const STORAGE_TYPE =
+   (process.env.NEXT_PUBLIC_STORAGE_TYPE as
+     | 'localstorage'
++    | 'file'
+     | 'redis'
+     | 'upstash'
+     | 'kvrocks'
+@@ -22,8 +24,12 @@ function createStorage(): IStorage {
+       return new RedisStorage();
+     case 'upstash':
+       return new UpstashRedisStorage();
+-    case 'kvrocks':
++case 'kvrocks':
+       return new KvrocksStorage();
++    case 'file':
++      // Self-hosted single-user deployments (the Android port) need a store
++      // that survives restarts without a Redis daemon.
++      return new FileStorage();
+     case 'localstorage':
+     default:
+       return null as unknown as IStorage;
+diff --git a/src/middleware.ts b/src/middleware.ts
+index b672d79..c627117 100644
+--- a/src/middleware.ts
++++ b/src/middleware.ts
+@@ -131,7 +131,10 @@ function shouldSkipAuth(pathname: string): boolean {
+ }
+ 
+ // 配置middleware匹配规则
++// Port patch: run middleware in the Node runtime - the default Edge sandbox
++// (runtime.context.addEventListener) is unimplemented in Bun and 500s.
+ export const config = {
++  runtime: 'nodejs',
+   matcher: [
+     '/((?!_next/static|_next/image|favicon.ico|login|warning|api/login|api/register|api/logout|api/cron|api/server-config).*)',
+   ],

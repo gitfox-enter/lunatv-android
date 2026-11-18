@@ -1,0 +1,37 @@
+# Upstream sources, cloned during build (not vendored here)
+vendor/
+selene-android-upstream/
+
+# Large binaries: get them from Releases, or rebuild per README
+*.apk
+*.apks
+lunatv.zip
+libbun.so
+*.so
+*.aab
+
+# Build outputs
+build/
+.dart_tool/
+.gradle/
+**/android/app/build/
+local.properties
+.gradle-cache/
+node_modules/
+.pnpm-store/
+
+# Toolchains
+tools/
+dist/
+downloads/
+
+# IDE / OS
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
